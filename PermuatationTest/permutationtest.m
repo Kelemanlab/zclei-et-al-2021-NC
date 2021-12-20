@@ -28,9 +28,33 @@ N_Trained = length(Trained);
 N_NaiveCtrl = length(NaiveCtrl);
 N_TrainedCtrl = length(TrainedCtrl);
 
+ptHeader = {'LI expByMedian(%)','p expByMedian','LI expByMean(%)','p expByMean','p expByRanksum',...
+    'LI CtrlByMedian(%)','LI CtrlByMean(%)','p CtrlByRanksum',...
+    'p E==C byMedian','p E=<C byMedian','p E>=C byMedian',...
+    'p E==C byMean','p E=<C byMean','p E>=C byMean'};
+ptHeader = ptHeader';
+
+ptTable.LI_expByMedian = nan;
+    ptTable.p_expByMedian = nan;
+    ptTable.LI_expByMean = nan;
+    ptTable.p_expByMean = nan;
+    ptTable.p_expByRanksum = nan;  % Mann-Whitney-Wilcoxon
+    ptTable.LI_CtrlByMedian = nan;
+    ptTable.LI_CtrlByMean = nan;
+    ptTable.p_ctrlByRanksum = nan;
+    ptTable.p_EC_equalMedian = nan;
+    ptTable.p_EC_smallerMedian = nan;
+    ptTable.p_EC_greaterMedian = nan;
+    ptTable.p_EC_equalMean = nan;
+    ptTable.p_EC_smallerMean = nan;
+    ptTable.p_EC_greaterMean = nan;
+ptResult = nan(14,1);
+
 % run the simulation if (after removing inputs that are not numbers) 
 % there are still numbers left in each group
-if N_Naive && N_Trained
+if N_Naive==0 || N_Trained==0
+    return;
+else
     Naive = Naive(:);
     Trained = Trained(:);
     NaiveCtrl = NaiveCtrl(:);
@@ -131,16 +155,6 @@ if N_Naive && N_Trained
     
     ptTable.p_expByRanksum = ranksum(Naive,Trained);  % Mann-Whitney-Wilcoxon
     
-    
-    ptTable.LI_CtrlByMedian = nan;
-    ptTable.LI_CtrlByMean = nan;
-    ptTable.p_ctrlByRanksum = nan;
-    ptTable.p_EC_equalMedian = nan;
-    ptTable.p_EC_smallerMedian = nan;
-    ptTable.p_EC_greaterMedian = nan;
-    ptTable.p_EC_equalMean = nan;
-    ptTable.p_EC_smallerMean = nan;
-    ptTable.p_EC_greaterMean = nan;
     if (CtrlProvided)
         
         ptTable.LI_CtrlByMedian = round(100*CtrlLImedian,2);
@@ -154,17 +168,8 @@ if N_Naive && N_Trained
         ptTable.p_EC_equalMean = eqSupportedCount / SimRounds;
         ptTable.p_EC_smallerMean = leSupportedCount / SimRounds;
         ptTable.p_EC_greaterMean = geSupportedCount / SimRounds;
-        ptHeader = {'LI expByMedian(%)','p expByMedian','LI expByMean(%)','p expByMean','p expByRanksum',...
-                    'LI CtrlByMedian(%)','LI CtrlByMean(%)','p CtrlByRanksum',...
-                     'p E==C byMedian','p E=<C byMedian','p E>=C byMedian',...
-                     'p E==C byMean','p E=<C byMean','p E>=C byMean'};
-        ptHeader = ptHeader';
-    else
-        ptHeader = {'LI by median(%)','LI by mean(%)','p by median','p by mean','p by ranksum'};
-        ptHeader = ptHeader';
+
     end
-    
-  
 
    ptResult = struct2cell(ptTable);
    ptResult = cell2mat(ptResult);
