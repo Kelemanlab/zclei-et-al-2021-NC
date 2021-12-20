@@ -8,4 +8,4 @@ It takes courtship indexes of experimental groups (naive and trained) and contro
 
   compare learning indexes between experimental group and control group with permutation test;
   
-The output is the courtship indexes boxtplot, learning indexex bar plot and an excel sheet file with all the CIs, LIs and test results.
+The outputs are the courtship indexes boxtplot, learning indexex bar plot and an excel sheet file with all the CIs, LIs and test results.
